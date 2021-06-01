@@ -111,7 +111,7 @@ jobs:
       - run:
           name: Run tests 
           command: 
-              php artisan dusk --filter test_Register     
+              php artisan dusk    
 
    #   - run:
     #      name: Run Browser Tests Tests
