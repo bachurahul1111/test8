@@ -1,0 +1,111 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # Specify the version you desire here
+      - image: circleci/php:7.4-node-browsers
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # Using the RAM variation mitigates I/O contention
+      # for database intensive operations.
+      # - image: circleci/mysql:5.7-ram
+      #
+      # - image: redis:2.8.19
+       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
+      - image: circleci/postgres:9.6-alpine
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+          POSTGRES_DB: test8db 
+
+    steps:
+      - checkout
+      - run:
+          name: Install pgsql driver
+          command: |
+            sudo apt-get update
+            sudo docker-php-ext-install zip
+         #  sudo docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+           
+
+      - run:
+          name: Install Node
+          command: |
+            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: composer install -n --prefer-dist
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package.json" }}
+            - node-v1-
+      - run: yarn install
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      - run:
+           name: "Generate App key"
+           command: php artisan key:generate
+
+   
+      # prepare the database
+      - run:
+          name: "Create database and run migration"
+          command: |
+            sudo apt-get install postgresql-client 
+            sudo php artisan migrate --env
+          
+        #    createdb -h 127.0.0.1 test8db -O postgres
+            
+
+      # run tests with phpunit or codecept
+      #- run: ./vendor/bin/phpunit
+      - run: ./vendor/bin/codecept build
+      - run: ./vendor/bin/codecept run
+
+      
+      - run:
+          name: "Install Dusk and Update Chrome Drivers"
+          command: |
+            composer require --dev laravel/dusk
+            composer require --dev staudenmeir/dusk-updater
+            
+
+      - run:
+          name: Start Chrome Driver
+          command: ./vendor/laravel/dusk/bin/chromedriver-linux
+          background: true
+
+      - run:
+          name: Run Laravel Server
+          command: php artisan serve
+          
+      - run:
+          name: Run Browser Tests Tests
+          command: php artisan dusk
+         
+
