@@ -107,5 +107,8 @@ jobs:
       - run:
           name: Run Browser Tests Tests
           command: php artisan dusk:chrome-driver
-         
 
+      - run:
+          name: Run Browser Tests Tests
+          command: php artisan dusk    
+          
