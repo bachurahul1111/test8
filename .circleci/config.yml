@@ -106,9 +106,12 @@ jobs:
           
       - run:
           name: Run Browser Tests Tests
-          command: php artisan dusk --filter test_Register
-      #       php artisan dusk:chrome-driver
-                   
+          command: 
+              php artisan dusk:chrome-driver
+      - run:
+          name: Run tests 
+          command: 
+              php artisan dusk --filter test_Register     
 
    #   - run:
     #      name: Run Browser Tests Tests
