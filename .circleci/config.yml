@@ -79,6 +79,12 @@ jobs:
       - run:
           name: "Run Unit Tests"
           command: ./vendor/bin/phpunit tests/Unit
+
+      - run:
+          name: "Create Environment file"
+          command: |
+           php artisan config:clear
+           php artisan config:clear
    
       # prepare the database
       - run:
