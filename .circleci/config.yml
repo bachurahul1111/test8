@@ -70,7 +70,10 @@ jobs:
       - run:
            name: "Generate App key"
            command: php artisan key:generate
-
+   
+      - run:
+          name: "Run Unit Tests"
+          command: ./vendor/bin/phpunit tests/Unit
    
       # prepare the database
    #   - run:
@@ -80,11 +83,10 @@ jobs:
       #      sudo php artisan migrate --env
           
         #    createdb -h 127.0.0.1 test8db -O postgres
-            
-
       - run:
-          name: "Run Unit Tests"
-          command: ./vendor/bin/phpunit tests/Unit
+          name: "Run Http Tests"
+          command: ./vendor/bin/phpunit tests/Feature
+            
 
       - run:
           name: "Install Dusk and Update Chrome Drivers"
