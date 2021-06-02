@@ -30,11 +30,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install pgsql driver
+          name: "Prepare Environment" 
           command: |
             sudo apt-get update
             sudo docker-php-ext-install zip
          #  sudo docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+
+      - run:
+          name: "Create Environment file"
+          command: |
+            mv .env.testing .env
            
 
       - run:
