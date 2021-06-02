@@ -25,7 +25,7 @@ jobs:
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ''
-     #     POSTGRES_DB: test8db 
+          POSTGRES_DB: test8db 
 
     steps:
       - checkout
