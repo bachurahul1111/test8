@@ -25,7 +25,7 @@ jobs:
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ''
-          POSTGRES_DB: test8db 
+     #    POSTGRES_DB: test8db 
 
     steps:
       - checkout
@@ -85,7 +85,7 @@ jobs:
           name: "Create database and run migration"
           command: |
             sudo apt-get install postgresql-client
-            createdb -h 127.0.0.1 -p 5432 -U postgres -w         
+            createdb -h 127.0.0.1 -p 5432 -U postgres -w   test8db      
             php artisan migrate --env=testing --database=test8db --force
           
             
