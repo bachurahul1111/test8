@@ -106,7 +106,7 @@ jobs:
      
       - run:
           name: Run tests 
-          command: php artisan dusk:chrome-driver && php artisan dusk --filter test_Register
+          command: php artisan dusk:chrome-driver && php artisan dusk 
                
 
    #   - run:
