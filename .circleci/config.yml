@@ -76,13 +76,14 @@ jobs:
           command: ./vendor/bin/phpunit tests/Unit
    
       # prepare the database
-   #   - run:
-   #       name: "Create database and run migration"
-    #      command: |
-     #       sudo apt-get install postgresql-client 
-      #      sudo php artisan migrate --env
+      - run:
+          name: "Create database and run migration"
+          command: |
+            sudo apt-get install postgresql-client 
+            createdb -h 127.0.0.1 -O postgres test8db
+            sudo php artisan migrate --env=testing
           
-        #    createdb -h 127.0.0.1 test8db -O postgres
+            
             
 
       - run:
