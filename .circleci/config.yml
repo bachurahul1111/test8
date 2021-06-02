@@ -90,11 +90,11 @@ jobs:
       - run:
           name: "Create database and run migration"
           command: |
-            sudo apt-get install postgresql-client 
+            
             createdb test8db
             php artisan migrate --env=testing --database=test8db --force        
       #     createdb -h 127.0.0.1 -p 5432 -U postgres -w  --maintenance-db=test8db       
-             
+      #     sudo apt-get install postgresql-client   
             
 
       - run:
